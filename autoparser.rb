@@ -23,7 +23,7 @@ class AutoParser
     doc = nokogiri_object
     @start_time = Time.now
 
-    @marks_data = doc.css('.mmm__item').inject({}) do |hash, marka|
+    @marks_data = doc.css('.search-form-v2-list__text-item').inject({}) do |hash, marka|
       hash[marka.children.first.children.first.text] = marka.children.first['href']; hash
     end
 
@@ -33,10 +33,10 @@ class AutoParser
   def parse_models
     marks_data.to_enum.with_index(1).each do |mark, index|
       key, value = mark
-      doc = nokogiri_object("https:#{value}")
+      doc = nokogiri_object("#{value}")
       puts "Parsed #{index} model, called #{key.capitalize}, remaining #{marks_data.count - index} models"
 
-      models = doc.css('.mmm__item').inject([]) do |array, model|
+      models = doc.css('.search-form-v2-list__text-item').inject([]) do |array, model|
         array << model.children.first.text; array
       end
 
@@ -57,4 +57,4 @@ class AutoParser
   end
 end
 
-AutoParser.new(filename: 'result.json', url: 'https://auto.ru').do_parse
+AutoParser.new(filename: 'result.json', url: 'https://auto.ru/catalog/cars/').do_parse
