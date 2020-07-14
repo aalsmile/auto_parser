@@ -9,7 +9,7 @@ class AutoParser
   def initialize(args = {})
     @filename = args[:filename]
     @url = args[:url]
-    @results = {}
+    @results = []
   end
 
   def do_parse
@@ -26,7 +26,7 @@ class AutoParser
     @marks_data = doc.css('.search-form-v2-list__text-item').inject({}) do |hash, marka|
       hash[marka.children.first.children.first.text] = marka.children.first['href']; hash
     end
-
+    
     puts "Count of model = #{marks_data.count}"
   end
 
@@ -40,8 +40,9 @@ class AutoParser
         array << model.children.first.text; array
       end
 
-      @results[key] = models
+      @results[index-1] = {'brand' => key, 'models' => models}
     end
+
 
     puts "Parsed for #{(Time.now - start_time).round} seconds"
   end
