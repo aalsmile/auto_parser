@@ -35,12 +35,19 @@ class AutoParser
       key, value = mark
       doc = nokogiri_object("#{value}")
       puts "Parsed #{index} model, called #{key.capitalize}, remaining #{marks_data.count - index} models"
-
-      models = doc.css('.search-form-v2-list_type_all .search-form-v2-list__text-item').inject([]) do |array, model|
-        array << model.children.first.text; array
+	
+      if doc.at_css('.search-form-v2-list_type_all')
+         models = doc.css('.search-form-v2-list_type_all .search-form-v2-list__text-item').inject([]) do |array, model|
+            array << model.children.first.text; array
+         end
+      else
+	 models = doc.css('.search-form-v2-list_type_popular .search-form-v2-list__text-item').inject([]) do |array, model|
+            array << model.children.first.text; array
+         end
       end
 
       @results[index-1] = {'brand' => key, 'models' => models}
+      sleep rand(2)
 
     end
 
